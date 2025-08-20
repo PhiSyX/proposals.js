@@ -1,0 +1,14 @@
+{
+	"name": "@phisyx/proposals.js",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"imports": {
+		"#root/*": "./src/*.ts"
+	},
+	"exports": {
+	},
+	"devDependencies": {
+		"@types/node": "^24.3.0"
+	}
+}
