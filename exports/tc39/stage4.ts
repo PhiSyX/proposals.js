@@ -1,5 +1,5 @@
 import { escape } from "#root/regexp/escape";
-import { trimEnd } from "#root/string/trim";
+import { trimEnd, trimStart } from "#root/string/trim";
 
 export class RegExpExtension
 {
@@ -9,4 +9,5 @@ export class RegExpExtension
 export class StringExtension
 {
 	static trimEnd = trimEnd;
+	static trimStart = trimStart;
 }

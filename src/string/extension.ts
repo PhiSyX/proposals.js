@@ -1,4 +1,4 @@
-import { trimEnd } from "#root/string/trim";
+import { trimEnd, trimStart } from "#root/string/trim";
 
 export class StringExtension
 {
@@ -19,6 +19,13 @@ export class StringExtension
 	{
 		return new StringExtension(
 			trimEnd(this.#source, patterns)
+		);
+	}
+
+	trimStart(patterns: string | Array<string>): StringExtension
+	{
+		return new StringExtension(
+			trimStart(this.#source, patterns)
 		);
 	}
 
