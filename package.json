@@ -8,7 +8,7 @@
 	},
 	"exports": {
 		"./tc39/*": "./exports/tc39/*.ts",
-		"./phisyx/*": "./exports/phisyx/*.ts"
+		"./lang/*": "./exports/lang/*.ts"
 	},
 	"devDependencies": {
 		"@types/node": "^24.3.0"
