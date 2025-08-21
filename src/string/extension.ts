@@ -14,9 +14,9 @@ type MatchGroupsOutput = Option<NonNullable<RegExpMatchArray["groups"]>>;
 
 export class StringExtension
 {
-	#source: string;
+	#source: string = "";
 
-	constructor(source: string)
+	constructor(source: string = "")
 	{
 		this.#source = source;
 	}
