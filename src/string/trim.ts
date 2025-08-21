@@ -14,7 +14,7 @@ export const trimEnd = (str: string, patterns?: string | Array<string>) =>
 	if (patterns !== undefined && patterns.length !== 0)
 	{
 		const pt = typeof patterns === "string" ? patterns : patterns.join("");
-		const lastRE = new RegExp(`${escape(pt)}+$`, "g");
+		const lastRE = new RegExp(`[${escape(pt)}]+$`, "g");
 		return str.replaceAll(lastRE, "");
 	}
 	return str.trimEnd();
@@ -28,7 +28,7 @@ export const trimStart = (str: string, patterns?: string | Array<string>) =>
 	if (patterns !== undefined && patterns.length !== 0)
 	{
 		const pt = typeof patterns === "string" ? patterns : patterns.join("");
-		const lastRE = new RegExp(`^${escape(pt)}+`, "g");
+		const lastRE = new RegExp(`^[${escape(pt)}]+`, "g");
 		return str.replaceAll(lastRE, "");
 	}
 	return str.trimStart();

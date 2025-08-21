@@ -21,7 +21,22 @@ it("TC39 trim{Start,End}: extension", ({ assert }) => {
 
 it("PhiSyX StringExtension: trim{Start,End}", ({ assert }) => {
     // '/a/b//' -> '/a/b'
-    assert.equal(new StringExtension("/a").push("/b/").push('/').trimEnd("/"), "/a/b");
+    assert.equal(
+        new StringExtension("/a").push("/b/").push('/').trimEnd("/"),
+        "/a/b"
+    );
     // '/a/b/' -> 'a/b/'
-    assert.equal(new StringExtension("/a").push("/b/").trimStart("/"), "a/b/");
+    assert.equal(
+        new StringExtension("/a").push("/b/").trimStart("/"),
+        "a/b/"
+    );
+
+    assert.equal(
+        new StringExtension(" /hello/ ").trimStart([' ', '/']),
+        "hello/ "
+    );
+    assert.equal(
+        new StringExtension(" /hello/ ").trimEnd([' ', '/']),
+        " /hello"
+    );
 });
