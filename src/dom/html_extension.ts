@@ -92,6 +92,12 @@ export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap>
 		return this;
 	}
 
+	querySelector<E extends keyof HTMLElementTagNameMap>(...qs: Parameters<Document["querySelector"]>): E | null
+	querySelector<E extends HTMLElement = HTMLElement>(...qs: Parameters<Document["querySelector"]>): E | null
+	{
+		return this.#element.querySelector<E>(...qs);
+	}
+
 	on<E extends keyof HTMLElementEventMap>(
 		evtName: E,
 		listener: (ev: HTMLElementEventMap[E]) => any,
