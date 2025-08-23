@@ -4,10 +4,24 @@ import { StringExtension } from "#root/string/extension";
 // Type //
 // ---- //
 
+type MakeHTMLElementExtension<
+	H extends new (...args: any) => HTMLElementExtension<T>,
+	T extends keyof HTMLElementTagNameMap
+> = H extends new (...args: infer A) => HTMLElementExtension<T>
+	? A 
+	: never;
+
+type MakeHTMLVoidElementExtension<
+	H extends new (...args: any) => HTMLVoidElementExtension<T>,
+	T extends keyof HTMLElementTagNameMap
+> = H extends new (...args: infer A) => HTMLElementExtension<T>
+	? A 
+	: never;
+
 interface HTMLElementHackyDecorator<
 	H extends abstract new (...args: any) => HTMLElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap,
-	I extends InstanceType<H> = InstanceType<H>
+	I extends InstanceType<H> = InstanceType<H>,
 >
 {
 	(...args: ConstructorParameters<H>): I;
@@ -18,9 +32,9 @@ interface HTMLElementHackyDecorator<
 }
 
 interface HTMLVoidElementHackyDecorator<
-	H extends abstract new (...args: any) => HTMLVoidElementExtension<T>,
+	H extends new (...args: any) => HTMLVoidElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap,
-	I extends InstanceType<H> = InstanceType<H>
+	I extends InstanceType<H> = InstanceType<H>,
 >
 {
 	(...args: ConstructorParameters<H>): I;
@@ -262,21 +276,43 @@ export function makeHTMLElementExtension<
 	H extends new (...args: any) => HTMLElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap,
 >(
-	htmlExt: H
-): HTMLElementHackyDecorator<H, T>
-{
-	// @ts-expect-error : to fixed
-	const make: HTMLElementHackyDecorator<H, T> =
-		(...args: ConstructorParameters<H>) => new htmlExt(...args);
+	htmlExt: H,
+	options?: { decorate: true }
+):  HTMLElementHackyDecorator<H, T>;
 
-	// @ts-expect-error : to fixed
-	make.attrs = (...args: any) => make().attrs(...args);
-	// @ts-expect-error : to fixed
-	make.id = (...args: any) => make().id(...args);
-	// @ts-expect-error : to fixed
-	make.class = (...args: any) => make().class(...args);
-	// @ts-expect-error : to fixed
-	make.text = (...args: any) => make().text(...args);
+export function makeHTMLElementExtension<
+	H extends new (...args: any) => HTMLElementExtension<T>,
+	T extends keyof HTMLElementTagNameMap,
+	A extends MakeHTMLElementExtension<H, T>
+>(
+	htmlExt: H,
+	options?: { decorate: false }
+): (...args: A) => HTMLElementExtension<T>;
+
+export function makeHTMLElementExtension<
+	H extends new (...args: any) => HTMLElementExtension<T>,
+	T extends keyof HTMLElementTagNameMap,
+	A extends MakeHTMLElementExtension<H, T>
+>(
+	htmlExt: H,
+	options?: { decorate?: boolean }
+)
+{
+	let make = (...args: A) => new htmlExt(...args);
+
+	options ||= {};
+	options.decorate ??= true;
+
+	if (options.decorate) {
+		// @ts-expect-error : to fixed
+		make.attrs = (...args: any) => make().attrs(...args);
+		// @ts-expect-error : to fixed
+		make.id = (...args: any) => make().id(...args);
+		// @ts-expect-error : to fixed
+		make.class = (...args: any) => make().class(...args);
+		// @ts-expect-error : to fixed
+		make.text = (...args: any) => make().text(...args);
+	}
 
 	return make;
 }
@@ -285,19 +321,41 @@ export function makeHTMLVoidElementExtension<
 	H extends new (...args: any) => HTMLVoidElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap,
 >(
-	htmlExt: H
-): HTMLVoidElementHackyDecorator<H, T>
-{
-	// @ts-expect-error : to fixed
-	const make: HTMLElementHackyDecorator<H, T> =
-		(...args: ConstructorParameters<H>) => new htmlExt(...args);
+	htmlExt: H,
+	options?: { decorate: true }
+): HTMLVoidElementHackyDecorator<H, T>;
 
-	// @ts-expect-error : to fixed
-	make.attrs = (...args: any) => make().attrs(...args);
-	// @ts-expect-error : to fixed
-	make.id = (...args: any) => make().id(...args);
-	// @ts-expect-error : to fixed
-	make.class = (...args: any) => make().class(...args);
+export function makeHTMLVoidElementExtension<
+	H extends new (...args: any) => HTMLVoidElementExtension<T>,
+	T extends keyof HTMLElementTagNameMap,
+	A extends MakeHTMLVoidElementExtension<H, T>
+>(
+	htmlExt: H,
+	options?: { decorate: false }
+): (...args: A) => HTMLVoidElementExtension<T>
+
+export function makeHTMLVoidElementExtension<
+	H extends new (...args: any) => HTMLVoidElementExtension<T>,
+	T extends keyof HTMLElementTagNameMap,
+	A extends MakeHTMLVoidElementExtension<H, T>
+>(
+	htmlExt: H,
+	options?: { decorate?: boolean }
+)
+{
+	const make = (...args: A) => new htmlExt(...args);
+
+	options ||= {};
+	options.decorate ??= true;
+
+	if (options.decorate) {
+		// @ts-expect-error : to fixed
+		make.attrs = (...args: any) => make().attrs(...args);
+		// @ts-expect-error : to fixed
+		make.id = (...args: any) => make().id(...args);
+		// @ts-expect-error : to fixed
+		make.class = (...args: any) => make().class(...args);
+	}
 
 	return make;
 }
