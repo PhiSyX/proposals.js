@@ -153,19 +153,24 @@ export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap>
 	}
 
 	// FIXME: use better types
-	// FIXME: use kebab case when set property name
 	style<P extends keyof CSSStyleDeclaration>(prop: P, value: CSSStyleDeclaration[P]): this
 	style(record: Partial<Record<keyof CSSStyleDeclaration, CSSStyleDeclaration[keyof CSSStyleDeclaration]>>): this
 	style(propRecord: any, value?: any): this
 	{
+		// TODO: use a better impl of kebab case
+		//       move to StringExtension.
+		const toKebabCase = (str: string) => {
+			return str.replaceAll(/([A-Z])/g, (_, $1) => `-${$1.toLowerCase()}`);
+		};
+
 		if (isLiteralObject(propRecord)) {
 			for (const [prop, val] of Object.entries(propRecord)) {
-				this.#element.style.setProperty(prop.toString(), val!.toString());
+				this.#element.style.setProperty(toKebabCase(prop.toString()), val!.toString());
 			}
 			return this;
 		}
 
-		this.#element.style.setProperty(propRecord.toString(), value!.toString());
+		this.#element.style.setProperty(toKebabCase(propRecord.toString()), value!.toString());
 		return this;
 	}
 
