@@ -8,14 +8,14 @@ type MakeHTMLElementExtension<
 	H extends new (...args: any) => HTMLElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap
 > = H extends new (...args: infer A) => HTMLElementExtension<T>
-	? A 
+	? A
 	: never;
 
 type MakeHTMLVoidElementExtension<
 	H extends new (...args: any) => HTMLVoidElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap
 > = H extends new (...args: infer A) => HTMLElementExtension<T>
-	? A 
+	? A
 	: never;
 
 interface HTMLElementHackyDecorator<
@@ -193,7 +193,7 @@ export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap> extends
 			if (isPrimitive(child)) return renderPrimitive(child);
 			if (child instanceof HTMLElement) return child;
 			if (child instanceof Date) return child.toISOString();
-			
+
 			if (
 				("render" in child && typeof child.render === "function") ||
 				child instanceof HTMLElementExtensionBase
@@ -288,7 +288,7 @@ export function makeHTMLElementExtension<
 >(
 	htmlExt: H,
 	options?: { decorate: false }
-): (...args: A) => HTMLElementExtension<T>;
+): (...args: A) => InstanceType<H>;
 
 export function makeHTMLElementExtension<
 	H extends new (...args: any) => HTMLElementExtension<T>,
@@ -335,7 +335,7 @@ export function makeHTMLVoidElementExtension<
 >(
 	htmlExt: H,
 	options?: { decorate: false }
-): (...args: A) => HTMLVoidElementExtension<T>
+): (...args: A) => InstanceType<H>;
 
 export function makeHTMLVoidElementExtension<
 	H extends new (...args: any) => HTMLVoidElementExtension<T>,
