@@ -5,15 +5,16 @@ import { StringExtension } from "#root/string/extension";
 // ---- //
 
 interface HTMLElementHackyDecorator<
-	T extends HTMLElementExtension<K>,
-	K extends keyof HTMLElementTagNameMap
+	T extends typeof HTMLElementExtension<K>,
+	K extends keyof HTMLElementTagNameMap,
+	I extends InstanceType<T> = InstanceType<T>
 >
 {
-	(...args: any): T;
-	attrs(...args: Parameters<T["attrs"]>): T;
-	id(...args: Parameters<T["id"]>): T;
-	class(...args: Parameters<T["class"]>): T;
-	text(...args: Parameters<T["text"]>): T;
+	(...args: ConstructorParameters<T>): I;
+	attrs(...args: Parameters<I["attrs"]>): I;
+	id(...args: Parameters<I["id"]>): I;
+	class(...args: Parameters<I["class"]>): I;
+	text(...args: Parameters<I["text"]>): I;
 }
 
 type ToStringRaw = {
@@ -190,10 +191,10 @@ export function makeHTMLExtension<
 	H extends typeof HTMLElementExtension<T>,
 >(
 	htmlExt: H
-): HTMLElementHackyDecorator<InstanceType<H>, T>
+): HTMLElementHackyDecorator<H, T>
 {
 	// @ts-expect-error : to fixed
-	const make: HTMLElementHackyDecorator<InstanceType<H>, T> =
+	const make: HTMLElementHackyDecorator<H, T> =
 		// @ts-expect-error : to fixed
 		(...args: ConstructorParameters<H>) => new htmlExt(...args);
 

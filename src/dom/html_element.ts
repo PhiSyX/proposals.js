@@ -14,9 +14,19 @@ class HTMLDivElementExtension extends HTMLElementExtension<"div">
 
 class HTMLSlotElementExtension extends HTMLElementExtension<"slot">
 {
-	constructor()
+	constructor(name?: string)
 	{
 		super("slot");
+
+		if (name) {
+			this.named(name);
+		}
+	}
+
+	named(name: string): this
+	{
+		this.el().setAttribute("name", name);
+		return this;
 	}
 }
 
@@ -25,5 +35,5 @@ class HTMLSlotElementExtension extends HTMLElementExtension<"slot">
 // ------ //
 
 export const div = makeHTMLExtension(HTMLDivElementExtension);
-export const slot = makeHTMLExtension(HTMLSlotElementExtension)
+export const slot = makeHTMLExtension(HTMLSlotElementExtension);
 // ...
