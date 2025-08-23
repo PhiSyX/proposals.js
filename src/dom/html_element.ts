@@ -17,7 +17,7 @@ interface HTMLElementHackyDecorator<
 }
 
 // -------- //
-// Fonction //
+// Function //
 // -------- //
 
 function makeHTMLExtension<
@@ -27,15 +27,19 @@ function makeHTMLExtension<
 	htmlExt: H
 ): HTMLElementHackyDecorator<InstanceType<H>, T>
 {
-	// @ts-expect-error :-)
+	// @ts-expect-error : to fixed
 	const make: HTMLElementHackyDecorator<InstanceType<H>, T> =
-		// @ts-expect-error :-)
+		// @ts-expect-error : to fixed
 		(...args: ConstructorParameters<H>) => new htmlExt(...args);
 
-	make.attrs = (...args: any) => make.attrs(...args);
-	make.id = (...args: any) => make.id(...args);
-	make.class = (...args: any) => make.class(...args);
-	make.text = (...args: any) => make.text(...args);
+	// @ts-expect-error : to fixed
+	make.attrs = (...args: any) => make().attrs(...args);
+	// @ts-expect-error : to fixed
+	make.id = (...args: any) => make().id(...args);
+	// @ts-expect-error : to fixed
+	make.class = (...args: any) => make().class(...args);
+	// @ts-expect-error : to fixed
+	make.text = (...args: any) => make().text(...args);
 
 	return make;
 }
