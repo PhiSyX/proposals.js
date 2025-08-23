@@ -1,10 +1,10 @@
-import { HTMLElementExtension, makeHTMLExtension } from "#root/dom/html_extension";
+import { HTMLElementExtension, HTMLVoidElementExtension, makeHTMLElementExtension, makeHTMLVoidElementExtension } from "#root/dom/html_extension";
 
 // --------------------- //
 // HTMLElement Extension //
 // --------------------- //
 
-class HTMLBRElementExtension extends HTMLElementExtension<"br">
+class HTMLBRElementExtension extends HTMLVoidElementExtension<"br">
 {
     constructor()
     {
@@ -65,9 +65,9 @@ class HTMLSpanElementExtension extends HTMLElementExtension<"span">
 // Export //
 // ------ //
 
-export const br = makeHTMLExtension(HTMLBRElementExtension);
-export const tab = makeHTMLExtension(HTMLTabElementExtension);
-export const div = makeHTMLExtension(HTMLDivElementExtension);
-export const slot = makeHTMLExtension(HTMLSlotElementExtension);
-export const span = makeHTMLExtension(HTMLSpanElementExtension);
+export const br = makeHTMLVoidElementExtension(HTMLBRElementExtension);
+export const tab = makeHTMLElementExtension(HTMLTabElementExtension);
+export const div = makeHTMLElementExtension(HTMLDivElementExtension);
+export const slot = makeHTMLElementExtension(HTMLSlotElementExtension);
+export const span = makeHTMLElementExtension(HTMLSpanElementExtension);
 // ...

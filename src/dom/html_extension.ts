@@ -17,13 +17,25 @@ interface HTMLElementHackyDecorator<
 	text(...args: Parameters<I["text"]>): I;
 }
 
+interface HTMLVoidElementHackyDecorator<
+	H extends abstract new (...args: any) => HTMLVoidElementExtension<T>,
+	T extends keyof HTMLElementTagNameMap,
+	I extends InstanceType<H> = InstanceType<H>
+>
+{
+	(...args: ConstructorParameters<H>): I;
+	attrs(...args: Parameters<I["attrs"]>): I;
+	id(...args: Parameters<I["id"]>): I;
+	class(...args: Parameters<I["class"]>): I;
+}
+
 type ToStringRaw = {
 	toString(): string;
 } & {};
 
 type ToString = (string | StringExtension) & ToStringRaw;
 type Primitive = string | number | bigint | boolean;
-type Children = Primitive | Date | HTMLElement | HTMLElementExtension<keyof HTMLElementTagNameMap>;
+type Children = Primitive | Date | HTMLElement | HTMLElementExtensionBase<keyof HTMLElementTagNameMap>;
 type FullPredicate = boolean | (() => boolean);
 type ClassName = ToString | ClassNameRecord;
 type ClassNameRecord = Record<string, FullPredicate>;
@@ -32,7 +44,7 @@ type ClassNameRecord = Record<string, FullPredicate>;
 // Implémentation //
 // -------------- //
 
-export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap>
+class HTMLElementExtensionBase<T extends keyof HTMLElementTagNameMap>
 {
     #element: HTMLElementTagNameMap[T];
 
@@ -86,26 +98,6 @@ export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap>
 		return this;
 	}
 
-	children(...children: Array<Children>): this
-	{
-		this.#element.append(...children.flatMap((child) => {
-			if (isPrimitive(child)) {
-				return renderPrimitive(child);
-			}
-
-			if (child instanceof HTMLElement) {
-				return child;
-			}
-
-			if (child instanceof Date) {
-				return child.toISOString();
-			}
-
-			return child.render();
-		}));
-		return this;
-	}
-
 	dataset(dataset: Record<string, ToStringRaw>): this
 	{
 		for (const [name, data] of Object.entries(dataset)) {
@@ -118,12 +110,6 @@ export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap>
 	{
 		this.#element.setAttribute("id", id.toString());
 		return this;
-	}
-
-	querySelector<E extends keyof HTMLElementTagNameMap>(selector: E): HTMLElementTagNameMap[E] | null
-	querySelector<E extends HTMLElement = HTMLElement>(selector: string): E | null
-	{
-		return this.#element.querySelector<E>(selector);
 	}
 
 	on<E extends keyof HTMLElementEventMap>(
@@ -174,19 +160,53 @@ export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap>
 		return this;
 	}
 
-	text(content: ToString, options?: { replace?: boolean }): this
-	{
-		if (options?.replace) {
-			this.#element.textContent = content.toString();
-		} else {
-			this.#element.append(content.toString());
-		}
-		return this;
-	}
-
 	render()
 	{
 		return this.el();
+	}
+}
+
+export class HTMLVoidElementExtension<T extends keyof HTMLElementTagNameMap> extends HTMLElementExtensionBase<T>
+{
+}
+
+export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap> extends HTMLElementExtensionBase<T>
+{
+	children(...children: Array<Children>): this
+	{
+		this.el().append(...children.flatMap((child) => {
+			if (isPrimitive(child)) {
+				return renderPrimitive(child);
+			}
+
+			if (child instanceof HTMLElement) {
+				return child;
+			}
+
+			if (child instanceof Date) {
+				return child.toISOString();
+			}
+
+			return child.render();
+		}));
+
+		return this;
+	}
+
+	querySelector<E extends keyof HTMLElementTagNameMap>(selector: E): HTMLElementTagNameMap[E] | null
+	querySelector<E extends HTMLElement = HTMLElement>(selector: string): E | null
+	{
+		return this.el().querySelector<E>(selector);
+	}
+
+	text(content: ToString, options?: { replace?: boolean }): this
+	{
+		if (options?.replace) {
+			this.el().textContent = content.toString();
+		} else {
+			this.el().append(content.toString());
+		}
+		return this;
 	}
 }
 
@@ -239,7 +259,7 @@ function renderPrimitive(value: Primitive): Array<string | HTMLElement>| string 
 	return value.toString();
 }
 
-export function makeHTMLExtension<
+export function makeHTMLElementExtension<
 	H extends new (...args: any) => HTMLElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap,
 >(
@@ -258,6 +278,27 @@ export function makeHTMLExtension<
 	make.class = (...args: any) => make().class(...args);
 	// @ts-expect-error : to fixed
 	make.text = (...args: any) => make().text(...args);
+
+	return make;
+}
+
+export function makeHTMLVoidElementExtension<
+	H extends new (...args: any) => HTMLVoidElementExtension<T>,
+	T extends keyof HTMLElementTagNameMap,
+>(
+	htmlExt: H
+): HTMLVoidElementHackyDecorator<H, T>
+{
+	// @ts-expect-error : to fixed
+	const make: HTMLElementHackyDecorator<H, T> =
+		(...args: ConstructorParameters<H>) => new htmlExt(...args);
+
+	// @ts-expect-error : to fixed
+	make.attrs = (...args: any) => make().attrs(...args);
+	// @ts-expect-error : to fixed
+	make.id = (...args: any) => make().id(...args);
+	// @ts-expect-error : to fixed
+	make.class = (...args: any) => make().class(...args);
 
 	return make;
 }
