@@ -35,7 +35,7 @@ type ToStringRaw = {
 
 type ToString = (string | StringExtension) & ToStringRaw;
 type Primitive = string | number | bigint | boolean;
-type Children = Primitive | Date | HTMLElement | HTMLElementExtensionBase<keyof HTMLElementTagNameMap>;
+type Children = Primitive | ToString | Date | HTMLElement | HTMLElementExtensionBase<keyof HTMLElementTagNameMap>;
 type FullPredicate = boolean | (() => boolean);
 type ClassName = ToString | ClassNameRecord;
 type ClassNameRecord = Record<string, FullPredicate>;
@@ -175,19 +175,18 @@ export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap> extends
 	children(...children: Array<Children>): this
 	{
 		this.el().append(...children.flatMap((child) => {
-			if (isPrimitive(child)) {
-				return renderPrimitive(child);
+			if (isPrimitive(child)) return renderPrimitive(child);
+			if (child instanceof HTMLElement) return child;
+			if (child instanceof Date) return child.toISOString();
+			
+			if (
+				("render" in child && typeof child.render === "function") ||
+				child instanceof HTMLElementExtensionBase
+			) {
+				return child.render();
 			}
 
-			if (child instanceof HTMLElement) {
-				return child;
-			}
-
-			if (child instanceof Date) {
-				return child.toISOString();
-			}
-
-			return child.render();
+			return child.toString();
 		}));
 
 		return this;
