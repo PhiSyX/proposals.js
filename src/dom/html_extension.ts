@@ -26,8 +26,9 @@ interface HTMLElementHackyDecorator<
 {
 	(...args: ConstructorParameters<H>): I;
 	attrs(...args: Parameters<I["attrs"]>): I;
-	id(...args: Parameters<I["id"]>): I;
 	class(...args: Parameters<I["class"]>): I;
+	children(...args: Parameters<I["children"]>): I;
+	id(...args: Parameters<I["id"]>): I;
 	text(...args: Parameters<I["text"]>): I;
 }
 
@@ -39,8 +40,8 @@ interface HTMLVoidElementHackyDecorator<
 {
 	(...args: ConstructorParameters<H>): I;
 	attrs(...args: Parameters<I["attrs"]>): I;
-	id(...args: Parameters<I["id"]>): I;
 	class(...args: Parameters<I["class"]>): I;
+	id(...args: Parameters<I["id"]>): I;
 }
 
 type ToStringRaw = {
@@ -307,9 +308,11 @@ export function makeHTMLElementExtension<
 		// @ts-expect-error : to fixed
 		make.attrs = (...args: any) => make().attrs(...args);
 		// @ts-expect-error : to fixed
-		make.id = (...args: any) => make().id(...args);
-		// @ts-expect-error : to fixed
 		make.class = (...args: any) => make().class(...args);
+		// @ts-expect-error : to fixed
+		make.children = (...args: any) => make().children(...args);
+		// @ts-expect-error : to fixed
+		make.id = (...args: any) => make().id(...args);
 		// @ts-expect-error : to fixed
 		make.text = (...args: any) => make().text(...args);
 	}
