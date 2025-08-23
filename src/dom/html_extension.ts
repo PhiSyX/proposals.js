@@ -14,7 +14,7 @@ type MakeHTMLElementExtension<
 type MakeHTMLVoidElementExtension<
 	H extends new (...args: any) => HTMLVoidElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap
-> = H extends new (...args: infer A) => HTMLElementExtension<T>
+> = H extends new (...args: infer A) => HTMLVoidElementExtension<T>
 	? A
 	: never;
 
