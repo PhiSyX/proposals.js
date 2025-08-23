@@ -22,7 +22,8 @@ type ToStringRaw = {
 } & {};
 
 type ToString = (string | StringExtension) & ToStringRaw;
-
+type Primitive = string | number | bigint | boolean;
+type Children = Primitive | Date | HTMLElement | HTMLElementExtension<keyof HTMLElementTagNameMap>;
 type FullPredicate = boolean | (() => boolean);
 type ClassName = ToString | ClassNameRecord;
 type ClassNameRecord = Record<string, FullPredicate>;
@@ -85,14 +86,22 @@ export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap>
 		return this;
 	}
 
-	children(child: HTMLElement): this;
-	children<E extends keyof HTMLElementTagNameMap>(child: HTMLElementExtension<E>): this
-	children(...children: Array<HTMLElementExtension<keyof HTMLElementTagNameMap>>): this
-	children(...children: Array<HTMLElement | HTMLElementExtension<keyof HTMLElementTagNameMap>>): this
+	children(...children: Array<Children>): this
 	{
-		this.#element.append(...children.map((c) => {
-			if (c instanceof HTMLElement) return c;
-			return c.render();
+		this.#element.append(...children.flatMap((child) => {
+			if (isPrimitive(child)) {
+				return renderPrimitive(child);
+			}
+
+			if (child instanceof HTMLElement) {
+				return child;
+			}
+
+			if (child instanceof Date) {
+				return child.toISOString();
+			}
+
+			return child.render();
 		}));
 		return this;
 	}
@@ -184,6 +193,45 @@ function isLiteralObject(value: unknown): value is object
 {
 	return value != null && typeof value === "object" &&
 		value.constructor?.name === "Object";
+}
+
+function isPrimitive(value: unknown): value is Primitive
+{
+	switch (typeof value) {
+		case "bigint":
+		case "number":
+		case "string":
+		case "boolean":
+			return true;
+	}
+	return false;
+}
+
+function renderPrimitive(value: Primitive): Array<string | HTMLElement>| string | HTMLElement
+{
+	if (typeof value === "boolean") {
+		return value ? "true" : "false";
+	}
+
+	if (typeof value === "string") {
+		return value.split(/([\n\t])/g).map((str) => {
+			switch (str) {
+				case "\n":
+					return document.createElement("br");
+				case "\t":
+				{
+					const $span = document.createElement("span");
+					$span.style.whiteSpace = "break-spaces";
+					$span.append(' '.repeat(4));
+					return $span;
+				};
+			}
+
+			return str;
+		});
+	}
+
+	return value.toString();
 }
 
 export function makeHTMLExtension<
