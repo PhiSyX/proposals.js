@@ -84,9 +84,15 @@ export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap>
 		return this;
 	}
 
-	children(...children: Array<HTMLElementExtension<any>>): this
+	children(child: HTMLElement): this;
+	children<E extends keyof HTMLElementTagNameMap>(child: HTMLElementExtension<E>): this
+	children(...children: Array<HTMLElementExtension<keyof HTMLElementTagNameMap>>): this
+	children(...children: Array<HTMLElement | HTMLElementExtension<keyof HTMLElementTagNameMap>>): this
 	{
-		this.#element.append(...children.map((c) => c.render()));
+		this.#element.append(...children.map((c) => {
+			if (c instanceof HTMLElement) return c;
+			return c.render();
+		}));
 		return this;
 	}
 
