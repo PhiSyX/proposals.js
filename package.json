@@ -8,7 +8,8 @@
 	},
 	"exports": {
 		"./tc39/*": "./exports/tc39/*.ts",
-		"./lang/*": "./exports/lang/*.ts"
+		"./lang/*": "./exports/lang/*.ts",
+		"./whatwg/*": "./exports/whatwg/*.ts"
 	},
 	"devDependencies": {
 		"@types/node": "^24.3.0"
