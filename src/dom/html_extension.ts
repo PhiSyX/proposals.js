@@ -5,12 +5,12 @@ import { StringExtension } from "#root/string/extension";
 // ---- //
 
 interface HTMLElementHackyDecorator<
-	T extends typeof HTMLElementExtension<K>,
-	K extends keyof HTMLElementTagNameMap,
-	I extends InstanceType<T> = InstanceType<T>
+	H extends abstract new (...args: any) => HTMLElementExtension<T>,
+	T extends keyof HTMLElementTagNameMap,
+	I extends InstanceType<H> = InstanceType<H>
 >
 {
-	(...args: ConstructorParameters<T>): I;
+	(...args: ConstructorParameters<H>): I;
 	attrs(...args: Parameters<I["attrs"]>): I;
 	id(...args: Parameters<I["id"]>): I;
 	class(...args: Parameters<I["class"]>): I;
@@ -240,15 +240,14 @@ function renderPrimitive(value: Primitive): Array<string | HTMLElement>| string 
 }
 
 export function makeHTMLExtension<
+	H extends new (...args: any) => HTMLElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap,
-	H extends typeof HTMLElementExtension<T>,
 >(
 	htmlExt: H
 ): HTMLElementHackyDecorator<H, T>
 {
 	// @ts-expect-error : to fixed
 	const make: HTMLElementHackyDecorator<H, T> =
-		// @ts-expect-error : to fixed
 		(...args: ConstructorParameters<H>) => new htmlExt(...args);
 
 	// @ts-expect-error : to fixed
