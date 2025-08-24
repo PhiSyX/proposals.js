@@ -1,4 +1,7 @@
-import { HTMLElementExtension, HTMLVoidElementExtension, makeHTMLElementExtension, makeHTMLVoidElementExtension } from "#root/dom/html_extension";
+import { 
+	HTMLElementExtension, HTMLVoidElementExtension, 
+	makeHTMLElementExtension, makeHTMLVoidElementExtension
+} from "#root/dom/html_extension";
 
 // --------------------- //
 // HTMLElement Extension //
@@ -69,7 +72,10 @@ class HTMLSpanElementExtension extends HTMLElementExtension<"span">
     }
 }
 
-abstract class HTMLHeadingElementExtension<T extends keyof HTMLElementTagNameMap> extends HTMLElementExtension<T> {
+abstract class HTMLHeadingElementExtension<
+	T extends keyof HTMLElementTagNameMap
+> extends HTMLElementExtension<T>
+{
 	constructor(level: 1 | 2 | 3 | 4 | 5 | 6, title: Parameters<HTMLElementExtension<T>["text"]>[0])
 	{
 		super(`h${level}` as unknown as T);

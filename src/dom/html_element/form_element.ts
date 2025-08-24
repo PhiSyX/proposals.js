@@ -1,9 +1,15 @@
 import type { HTMLElementExtensionBase } from "#root/dom/html_extension";
 import type { Option } from "#root/safety/contract/option";
-import type { HTMLButtonElementType, HTMLFormElementMethod, HTMLInputElementType, Listeners, ToEvent } from "#types/html";
+import type { 
+	HTMLButtonElementType, HTMLFormElementMethod, HTMLInputElementType,
+	Listeners, SubmitListener, ToEvent,
+} from "#types/html";
 import type { ToString } from "#types/lang";
 
-import { HTMLElementExtension, HTMLVoidElementExtension, makeHTMLElementExtension } from "#root/dom/html_extension";
+import {
+	HTMLElementExtension, HTMLVoidElementExtension,
+	makeHTMLElementExtension,
+} from "#root/dom/html_extension";
 import { None } from "#root/safety/option";
 
 // ---- //
@@ -95,7 +101,7 @@ export abstract class HTMLFormInputComponentContract
 		return this.#relatedForm;
 	}
 
-	public abstract render(): HTMLElementExtensionBase<keyof HTMLElementTagNameMap>;
+	abstract render(): HTMLElementExtensionBase<keyof HTMLElementTagNameMap>;
 }
 
 class HTMLFormElementExtension extends HTMLElementExtension<"form">
@@ -136,13 +142,13 @@ class HTMLFormElementExtension extends HTMLElementExtension<"form">
 		component:
 			| HTMLButtonElementExtension,
 		listener?:
-			| ((evt: SubmitEvent, data: Record<string, any>) => void),
+			| SubmitListener,
 		options:
 			| { forceType?: boolean }
 			= { forceType: false }
 	): this
 	{
-		const onSubmit = (handler: (evt: SubmitEvent, data: Record<string, any>) => void) => {
+		const onSubmit = (handler: SubmitListener) => {
 			this.el().addEventListener("submit", (evt) => {
 				evt.preventDefault();
 				const form = new FormData(this.el());
@@ -207,7 +213,9 @@ class HTMLButtonElementExtension extends HTMLElementExtension<"button">
 // Fonction //
 // -------- //
 
-function makeFormElementExtension(formExt: typeof HTMLFormElementExtension): FormElementHackyDecorator
+function makeFormElementExtension(
+	formExt: typeof HTMLFormElementExtension
+): FormElementHackyDecorator
 {
 	// @ts-expect-error : to fixed
 	let make = (...args: any) => new formExt(...args);
@@ -221,7 +229,9 @@ function makeFormElementExtension(formExt: typeof HTMLFormElementExtension): For
 	return make;
 }
 
-function makeFormInputElementExtension(inputExt: typeof HTMLInputElementExtension): FormInputElementHackyDecorator
+function makeFormInputElementExtension(
+	inputExt: typeof HTMLInputElementExtension
+): FormInputElementHackyDecorator
 {
 	// @ts-expect-error : to fixed
 	let make = (...args: any) => new inputExt(...args);
@@ -251,7 +261,9 @@ function makeFormInputElementExtension(inputExt: typeof HTMLInputElementExtensio
 	return make;
 }
 
-function makeFormButtonElementExtension(buttonExt: typeof HTMLButtonElementExtension): FormButtonElementHackyDecorator
+function makeFormButtonElementExtension(
+	buttonExt: typeof HTMLButtonElementExtension
+): FormButtonElementHackyDecorator
 {
 	let make = (...args: any) => new buttonExt(...args);
 

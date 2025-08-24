@@ -119,10 +119,13 @@ export class HTMLElementExtensionBase<T extends keyof HTMLElementTagNameMap>
 		return this;
 	}
 
-	on<E extends keyof HTMLElementEventMap>(
-		evtName: E,
-		listener: (ev: HTMLElementEventMap[E]) => any,
-		options?: AddEventListenerOptions
+	on<EventName extends keyof HTMLElementEventMap>(
+		evtName: 
+			| EventName,
+		listener: 
+			| ((evt: HTMLElementEventMap[EventName]) => void),
+		options?: 
+			| AddEventListenerOptions
 	): this
 	{
 		this.#element.addEventListener(
@@ -134,10 +137,13 @@ export class HTMLElementExtensionBase<T extends keyof HTMLElementTagNameMap>
 		return this;
 	}
 
-	once<E extends keyof HTMLElementEventMap>(
-		evtName: E,
-		listener: (ev: HTMLElementEventMap[E]) => any,
-		options: Omit<AddEventListenerOptions, "once"> = {}
+	once<EventName extends keyof HTMLElementEventMap>(
+		evtName: 
+			| EventName,
+		listener: 
+			| ((ev: HTMLElementEventMap[EventName]) => void),
+		options: 
+			| Omit<AddEventListenerOptions, "once"> = {}
 	): this
 	{
 		(options as AddEventListenerOptions).once ||= true;
@@ -181,11 +187,15 @@ export class HTMLElementExtensionBase<T extends keyof HTMLElementTagNameMap>
 	}
 }
 
-export class HTMLVoidElementExtension<T extends keyof HTMLElementTagNameMap> extends HTMLElementExtensionBase<T>
+export class HTMLVoidElementExtension<
+	T extends keyof HTMLElementTagNameMap
+> extends HTMLElementExtensionBase<T>
 {
 }
 
-export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap> extends HTMLElementExtensionBase<T>
+export class HTMLElementExtension<
+	T extends keyof HTMLElementTagNameMap
+> extends HTMLElementExtensionBase<T>
 {
 	children(...children: Array<Children>): this
 	{
@@ -207,8 +217,12 @@ export class HTMLElementExtension<T extends keyof HTMLElementTagNameMap> extends
 		return this;
 	}
 
-	querySelector<E extends keyof HTMLElementTagNameMap>(selector: E): HTMLElementTagNameMap[E] | null
-	querySelector<E extends HTMLElement = HTMLElement>(selector: string): E | null
+	querySelector<E extends keyof HTMLElementTagNameMap>(
+		tagName: E
+	): HTMLElementTagNameMap[E] | null
+	querySelector<E extends HTMLElement = HTMLElement>(
+		selector: string
+	): E | null
 	{
 		return this.el().querySelector<E>(selector);
 	}
@@ -246,7 +260,10 @@ function isPrimitive(value: unknown): value is Primitive
 	return false;
 }
 
-function renderPrimitive(value: Primitive): Array<string | HTMLElement>| string | HTMLElement
+function renderPrimitive(value: Primitive): 
+	| Array<| string | HTMLElement>
+	| string
+	| HTMLElement
 {
 	if (typeof value === "boolean") {
 		return value ? "true" : "false";
@@ -278,25 +295,25 @@ export function makeHTMLElementExtension<
 	T extends keyof HTMLElementTagNameMap,
 >(
 	htmlExt: H,
-	options?: { decorate: true }
+	options?: { decorate: true },
 ):  HTMLElementHackyDecorator<H, T>;
 
 export function makeHTMLElementExtension<
 	H extends new (...args: any) => HTMLElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap,
-	A extends MakeHTMLElementExtension<H, T>
+	A extends MakeHTMLElementExtension<H, T>,
 >(
 	htmlExt: H,
-	options?: { decorate: false }
+	options?: { decorate: false },
 ): (...args: A) => InstanceType<H>;
 
 export function makeHTMLElementExtension<
 	H extends new (...args: any) => HTMLElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap,
-	A extends MakeHTMLElementExtension<H, T>
+	A extends MakeHTMLElementExtension<H, T>,
 >(
 	htmlExt: H,
-	options?: { decorate?: boolean }
+	options?: { decorate?: boolean },
 )
 {
 	let make = (...args: A) => new htmlExt(...args);
@@ -325,25 +342,25 @@ export function makeHTMLVoidElementExtension<
 	T extends keyof HTMLElementTagNameMap,
 >(
 	htmlExt: H,
-	options?: { decorate: true }
+	options?: { decorate: true },
 ): HTMLVoidElementHackyDecorator<H, T>;
 
 export function makeHTMLVoidElementExtension<
 	H extends new (...args: any) => HTMLVoidElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap,
-	A extends MakeHTMLVoidElementExtension<H, T>
+	A extends MakeHTMLVoidElementExtension<H, T>,
 >(
 	htmlExt: H,
-	options?: { decorate: false }
+	options?: { decorate: false },
 ): (...args: A) => InstanceType<H>;
 
 export function makeHTMLVoidElementExtension<
 	H extends new (...args: any) => HTMLVoidElementExtension<T>,
 	T extends keyof HTMLElementTagNameMap,
-	A extends MakeHTMLVoidElementExtension<H, T>
+	A extends MakeHTMLVoidElementExtension<H, T>,
 >(
 	htmlExt: H,
-	options?: { decorate?: boolean }
+	options?: { decorate?: boolean },
 )
 {
 	const make = (...args: A) => new htmlExt(...args);

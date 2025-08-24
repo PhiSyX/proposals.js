@@ -25,11 +25,14 @@ class DefaultOption<T> implements Option<T>
 	// Static //
 	// ------ //
 
-	static None = <T = never>(): Option<T> =>new DefaultOption<T>(OptionVariant.None);
-	static Some = <T>(value: NonNullable<T>): Option<T> => new DefaultOption<T>(OptionVariant.Some, value);
-	static from = <T>(value: T | null | undefined): Option<NonNullable<T>> => {
-		return value == null ? None() : Some<NonNullable<T>>(value);
-	};
+	static None =    (): Option<never> => 
+		new DefaultOption<never>(OptionVariant.None);
+
+	static Some = <T>(value: NonNullable<T>): Option<T> => 
+		new DefaultOption<T>(OptionVariant.Some, value);
+
+	static from = <T>(value: T | null | undefined): Option<NonNullable<T>> => 
+		value == null ? None() : Some<NonNullable<T>>(value);
 
 	// --------- //
 	// Propriété //
@@ -126,7 +129,7 @@ class DefaultOption<T> implements Option<T>
 	clone(): this
 	{
 		try   { return Some(this.unwrap()!) as this }
-		catch { return None() as this }
+		catch { return None() as unknown as this }
 	}
 
 	expect(msg: string): T
