@@ -1,3 +1,6 @@
+import type { Children, ClassName } from "#types/html";
+import type { FullPredicate, Primitive, ToString, ToStringRaw } from "#types/lang";
+
 import { StringExtension } from "#root/string/extension";
 
 // ---- //
@@ -43,17 +46,6 @@ interface HTMLVoidElementHackyDecorator<
 	class(...args: Parameters<I["class"]>): I;
 	id(...args: Parameters<I["id"]>): I;
 }
-
-type ToStringRaw = {
-	toString(): string;
-} & {};
-
-type ToString = (string | StringExtension) & ToStringRaw;
-type Primitive = string | number | bigint | boolean;
-type Children = Primitive | ToString | Date | HTMLElement | HTMLElementExtensionBase<keyof HTMLElementTagNameMap>;
-type FullPredicate = boolean | (() => boolean);
-type ClassName = ToString | ClassNameRecord;
-type ClassNameRecord = Record<string, FullPredicate>;
 
 // -------------- //
 // Implémentation //

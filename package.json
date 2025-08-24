@@ -4,7 +4,8 @@
 	"version": "0.1.0",
 	"type": "module",
 	"imports": {
-		"#root/*": "./src/*.ts"
+		"#root/*": "./src/*.ts",
+		"#types/*": "./types/*.ts"
 	},
 	"exports": {
 		"./tc39/*": "./exports/tc39/*.ts",
