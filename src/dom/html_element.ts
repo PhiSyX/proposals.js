@@ -139,4 +139,8 @@ export const h3 = makeHTMLElementExtension(HTMLHeadingLevel3ElementExtension, { 
 export const h4 = makeHTMLElementExtension(HTMLHeadingLevel4ElementExtension, { decorate: false });
 export const h5 = makeHTMLElementExtension(HTMLHeadingLevel5ElementExtension, { decorate: false });
 export const h6 = makeHTMLElementExtension(HTMLHeadingLevel6ElementExtension, { decorate: false });
-// ...
+
+export {
+	button, form, input, label,
+	HTMLFormInputComponentContract,
+} from "#root/dom/html_element/form_element";
