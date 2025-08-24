@@ -59,7 +59,7 @@ type ClassNameRecord = Record<string, FullPredicate>;
 // Implémentation //
 // -------------- //
 
-class HTMLElementExtensionBase<T extends keyof HTMLElementTagNameMap>
+export class HTMLElementExtensionBase<T extends keyof HTMLElementTagNameMap>
 {
     #element: HTMLElementTagNameMap[T];
 
@@ -174,6 +174,14 @@ class HTMLElementExtensionBase<T extends keyof HTMLElementTagNameMap>
 		this.#element.style.setProperty(toKebabCase(propRecord.toString()), value!.toString());
 		return this;
 	}
+
+	title(title: ToString): this
+	{
+		this.#element.setAttribute("title", title.toString());
+		return this;
+	}
+
+	/* Render Method */
 
 	render()
 	{
