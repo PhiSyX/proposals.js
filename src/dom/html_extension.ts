@@ -105,6 +105,28 @@ export class HTMLElementExtensionBase<T extends keyof HTMLElementTagNameMap>
 		return this;
 	}
 
+	css(promise: () => Promise<{ default: unknown }>): this
+	{
+		const output = promise();
+
+		output.then(({ default: def }) => def).then((css) => {
+			if (css instanceof CSSStyleSheet) {
+				document.adoptedStyleSheets.push(css);
+				return true;
+			}
+
+			return Promise.reject(
+				new Error(
+					`${HTMLElementExtensionBase.name}#css: Unhandled value (requires an object of type CSSStyleSheet)`
+				)
+			);
+		}).catch((err) => {
+			console.error(err);
+		});
+
+		return this;
+	}
+
 	dataset(dataset: Record<string, ToStringRaw>): this
 	{
 		for (const [name, data] of Object.entries(dataset)) {
@@ -120,11 +142,11 @@ export class HTMLElementExtensionBase<T extends keyof HTMLElementTagNameMap>
 	}
 
 	on<EventName extends keyof HTMLElementEventMap>(
-		evtName: 
+		evtName:
 			| EventName,
-		listener: 
+		listener:
 			| ((evt: HTMLElementEventMap[EventName]) => void),
-		options?: 
+		options?:
 			| AddEventListenerOptions
 	): this
 	{
@@ -138,11 +160,11 @@ export class HTMLElementExtensionBase<T extends keyof HTMLElementTagNameMap>
 	}
 
 	once<EventName extends keyof HTMLElementEventMap>(
-		evtName: 
+		evtName:
 			| EventName,
-		listener: 
+		listener:
 			| ((ev: HTMLElementEventMap[EventName]) => void),
-		options: 
+		options:
 			| Omit<AddEventListenerOptions, "once"> = {}
 	): this
 	{
@@ -260,7 +282,7 @@ function isPrimitive(value: unknown): value is Primitive
 	return false;
 }
 
-function renderPrimitive(value: Primitive): 
+function renderPrimitive(value: Primitive):
 	| Array<| string | HTMLElement>
 	| string
 	| HTMLElement

@@ -2,10 +2,10 @@ import type { HTMLElementExtensionBase } from "#root/dom/html_extension";
 import type { FullPredicate, Primitive, ToString } from "#types/lang";
 
 export type Children =
-	| Primitive 
-	| ToString 
-	| Date 
-	| HTMLElement 
+	| Primitive
+	| ToString
+	| Date
+	| HTMLElement
 	| HTMLElementExtensionBase<keyof HTMLElementTagNameMap>;
 
 export type ClassName = ToString | ClassNameRecord;
@@ -19,11 +19,10 @@ export type ToEventName<L> = L extends `on${infer F}${infer R}`
 	? `${Lowercase<F>}${R}`
 	: never;
 
-export type ToEvent<L> = ToEventName<L> extends infer EventName 
+export type ToEvent<L> = ToEventName<L> extends infer EventName
 	extends keyof GlobalEventHandlersEventMap
 		? GlobalEventHandlersEventMap[EventName]
 		: never;
-
 
 export type HTMLFormElementMethod = HTMLFormMethodLower | HTMLFormMethodUpper;
 type HTMLFormMethodLower = "get" | "post" | "patch" | "put" | "delete" ;
@@ -37,7 +36,7 @@ export type HTMLInputElementType =
 	| "hidden"
 	| "image"
 	| "number"
-	| "password"
+	| "current-password" | "password"
 	| "radio" | "range"
 	| "search"
 	| "tel" | "text" | "time"
