@@ -1,5 +1,5 @@
-import { 
-	HTMLElementExtension, HTMLVoidElementExtension, 
+import {
+	HTMLElementExtension, HTMLVoidElementExtension,
 	makeHTMLElementExtension, makeHTMLVoidElementExtension
 } from "#root/dom/html_extension";
 
@@ -7,7 +7,7 @@ import {
 // HTMLElement Extension //
 // --------------------- //
 
-class HTMLBRElementExtension extends HTMLVoidElementExtension<"br">
+export class HTMLBRElementExtension extends HTMLVoidElementExtension<"br">
 {
     constructor()
     {
@@ -15,7 +15,7 @@ class HTMLBRElementExtension extends HTMLVoidElementExtension<"br">
     }
 }
 
-class HTMLTabElementExtension extends HTMLElementExtension<"span">
+export class HTMLTabElementExtension extends HTMLElementExtension<"span">
 {
     constructor(indentSize: number = 4)
     {
@@ -30,7 +30,7 @@ class HTMLTabElementExtension extends HTMLElementExtension<"span">
 	}
 }
 
-class HTMLDivElementExtension extends HTMLElementExtension<"div">
+export class HTMLDivElementExtension extends HTMLElementExtension<"div">
 {
     constructor()
     {
@@ -38,7 +38,7 @@ class HTMLDivElementExtension extends HTMLElementExtension<"div">
     }
 }
 
-class HTMLSectionElementExtension extends HTMLElementExtension<"section">
+export class HTMLSectionElementExtension extends HTMLElementExtension<"section">
 {
 	constructor()
 	{
@@ -46,7 +46,7 @@ class HTMLSectionElementExtension extends HTMLElementExtension<"section">
 	}
 }
 
-class HTMLSlotElementExtension extends HTMLElementExtension<"slot">
+export class HTMLSlotElementExtension extends HTMLElementExtension<"slot">
 {
 	constructor(name?: string)
 	{
@@ -64,7 +64,7 @@ class HTMLSlotElementExtension extends HTMLElementExtension<"slot">
 	}
 }
 
-class HTMLSpanElementExtension extends HTMLElementExtension<"span">
+export class HTMLSpanElementExtension extends HTMLElementExtension<"span">
 {
     constructor()
     {
@@ -84,42 +84,42 @@ abstract class HTMLHeadingElementExtension<
 	}
 }
 
-class HTMLHeadingLevel1ElementExtension extends HTMLHeadingElementExtension<"h1">
+export class HTMLHeadingLevel1ElementExtension extends HTMLHeadingElementExtension<"h1">
 {
 	constructor(title: Parameters<HTMLElementExtension<"h1">["text"]>[0])
 	{
 		super(1, title);
 	}
 }
-class HTMLHeadingLevel2ElementExtension extends HTMLHeadingElementExtension<"h2">
+export class HTMLHeadingLevel2ElementExtension extends HTMLHeadingElementExtension<"h2">
 {
 	constructor(title: Parameters<HTMLElementExtension<"h2">["text"]>[0])
 	{
 		super(2, title);
 	}
 }
-class HTMLHeadingLevel3ElementExtension extends HTMLHeadingElementExtension<"h3">
+export class HTMLHeadingLevel3ElementExtension extends HTMLHeadingElementExtension<"h3">
 {
 	constructor(title: Parameters<HTMLElementExtension<"h3">["text"]>[0])
 	{
 		super(3, title);
 	}
 }
-class HTMLHeadingLevel4ElementExtension extends HTMLHeadingElementExtension<"h4">
+export class HTMLHeadingLevel4ElementExtension extends HTMLHeadingElementExtension<"h4">
 {
 	constructor(title: Parameters<HTMLElementExtension<"h4">["text"]>[0])
 	{
 		super(4, title);
 	}
 }
-class HTMLHeadingLevel5ElementExtension extends HTMLHeadingElementExtension<"h5">
+export class HTMLHeadingLevel5ElementExtension extends HTMLHeadingElementExtension<"h5">
 {
 	constructor(title: Parameters<HTMLElementExtension<"h5">["text"]>[0])
 	{
 		super(5, title);
 	}
 }
-class HTMLHeadingLevel6ElementExtension extends HTMLHeadingElementExtension<"h6">
+export class HTMLHeadingLevel6ElementExtension extends HTMLHeadingElementExtension<"h6">
 {
 	constructor(title: Parameters<HTMLElementExtension<"h6">["text"]>[0])
 	{
@@ -146,7 +146,4 @@ export const h4 = makeHTMLElementExtension(HTMLHeadingLevel4ElementExtension, { 
 export const h5 = makeHTMLElementExtension(HTMLHeadingLevel5ElementExtension, { decorate: false });
 export const h6 = makeHTMLElementExtension(HTMLHeadingLevel6ElementExtension, { decorate: false });
 
-export {
-	button, form, input, label,
-	HTMLFormInputComponentContract,
-} from "#root/dom/html_element/form_element";
+export * from "#root/dom/html_element/form_element";

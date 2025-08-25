@@ -1,6 +1,6 @@
 import type { HTMLElementExtensionBase } from "#root/dom/html_extension";
 import type { Option } from "#root/safety/contract/option";
-import type { 
+import type {
 	HTMLButtonElementType, HTMLFormElementMethod, HTMLInputElementType,
 	Listeners, SubmitListener, ToEvent,
 } from "#types/html";
@@ -16,7 +16,7 @@ import { None } from "#root/safety/option";
 // Type //
 // ---- //
 
-type HTMLFormInputComponentEvents =
+export type HTMLFormInputComponentEvents =
 {
 	[L in Listeners]?: (evt: ToEvent<L>) => void;
 };
@@ -82,13 +82,25 @@ interface FormButtonElementHackyDecorator<
 // Implémentation //
 // -------------- //
 
+// TODO: Handle error
 export abstract class HTMLFormInputComponentContract
 {
+	#name: ToString;
 	#relatedForm: Option<HTMLFormElementExtension> = None();
+
+	constructor(name: ToString)
+	{
+		this.#name = name;
+	}
 
 	setRelatedForm(form: HTMLFormElementExtension)
 	{
 		this.#relatedForm.replace(form);
+	}
+
+	get name()
+	{
+		return this.#name;
 	}
 
 	get relatedForm()
@@ -104,8 +116,11 @@ export abstract class HTMLFormInputComponentContract
 	abstract render(): HTMLElementExtensionBase<keyof HTMLElementTagNameMap>;
 }
 
-class HTMLFormElementExtension extends HTMLElementExtension<"form">
+export class HTMLFormElementExtension extends HTMLElementExtension<"form">
 {
+	// TODO: change string to HTMLFormInputName
+	#fields: Map<string, HTMLFormInputComponentContract> = new Map();
+
 	constructor(method: HTMLFormElementMethod, action: ToString)
 	{
 		super("form");
@@ -113,8 +128,11 @@ class HTMLFormElementExtension extends HTMLElementExtension<"form">
 		this.attrs({ action, method });
 	}
 
-	// TODO: use an event to notify the current element that the component
-	// has been added.
+	get fields(): Readonly<Map<string, HTMLFormInputComponentContract>>
+	{
+		return Object.freeze(this.#fields);
+	}
+
 	input(
 		component:
 			| HTMLFormInputComponentContract
@@ -134,6 +152,8 @@ class HTMLFormElementExtension extends HTMLElementExtension<"form">
 			// @ts-expect-error
 			el.on(name.slice(2).toLowerCase(), listener.bind(component));
 		}
+
+		this.#fields.set(component.name.toString(), component);
 
 		return this;
 	}
@@ -169,7 +189,7 @@ class HTMLFormElementExtension extends HTMLElementExtension<"form">
 	}
 }
 
-class HTMLInputElementExtension extends HTMLVoidElementExtension<"input">
+export class HTMLInputElementExtension extends HTMLVoidElementExtension<"input">
 {
 	constructor(name: ToString, type?: HTMLInputElementType, defaultValue?: ToString)
 	{
@@ -180,7 +200,7 @@ class HTMLInputElementExtension extends HTMLVoidElementExtension<"input">
 	}
 }
 
-class HTMLLabelElementExtension extends HTMLElementExtension<"label">
+export class HTMLLabelElementExtension extends HTMLElementExtension<"label">
 {
 	constructor(label: ToString)
 	{
@@ -194,7 +214,7 @@ class HTMLLabelElementExtension extends HTMLElementExtension<"label">
 	}
 }
 
-class HTMLButtonElementExtension extends HTMLElementExtension<"button">
+export class HTMLButtonElementExtension extends HTMLElementExtension<"button">
 {
 	constructor(type: HTMLButtonElementType = "button")
 	{
