@@ -1,10 +1,14 @@
 import type { HTMLElementExtensionBase } from "#root/dom/html_extension";
+import type { Computed } from "#root/signals/computed";
+import type { State } from "#root/signals/state";
 import type { FullPredicate, Primitive, ToString } from "#types/lang";
 
-export type Children =
+export type Child =
 	| Primitive
 	| ToString
 	| Date
+	| State<any>
+	| Computed<any>
 	| HTMLElement
 	| HTMLElementExtensionBase<keyof HTMLElementTagNameMap>;
 

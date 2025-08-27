@@ -1,7 +1,9 @@
-import type { Children, ClassName } from "#types/html";
+import type { Child, ClassName } from "#types/html";
 import type { FullPredicate, Primitive, ToString, ToStringRaw } from "#types/lang";
 
 import { StringExtension } from "#root/string/extension";
+import { State } from "#root/signals/state";
+import { Computed } from "#root/signals/computed";
 
 // ---- //
 // Type //
@@ -219,12 +221,55 @@ export class HTMLElementExtension<
 	T extends keyof HTMLElementTagNameMap
 > extends HTMLElementExtensionBase<T>
 {
-	children(...children: Array<Children>): this
+	children(...children: Array<Child>): this
 	{
-		this.el().append(...children.flatMap((child) => {
+		const handleSignal = (child: State<ToString>) => {
+			const toNode = (val: ToString): Text => {
+				return document.createTextNode(val.toString());
+			};
+
+			let node = toNode(child.value.toString());
+
+			child.watch((oldValue, newValue) => {
+				if (oldValue.toString() === newValue.toString()) return;
+
+				let newNode = toNode(newValue.toString());
+				node.replaceWith(newNode);
+				node = newNode;
+			});
+
+			return node;
+		};
+
+		const handleSignalComputed = (child: Computed<ToString>) => {
+			const toNode = (val: ToString): Text => {
+				return document.createTextNode(val.toString());
+			};
+
+			let node = toNode(child.value.toString());
+
+			child.watch((newValue) => {
+				const newNode = toNode(newValue.toString());
+				node.replaceWith(newNode);
+				node = newNode;
+			});
+
+			return node;
+		};
+
+		const intoNodeValue = (child: Child) => {
 			if (isPrimitive(child)) return renderPrimitive(child);
-			if (child instanceof HTMLElement) return child;
+
+			if (
+				child instanceof Node ||
+				child instanceof HTMLElement
+			) return child;
+
 			if (child instanceof Date) return child.toISOString();
+
+			if (child instanceof State) return handleSignal(child);
+
+			if (child instanceof Computed) return handleSignalComputed(child);
 
 			if (
 				("render" in child && typeof child.render === "function") ||
@@ -234,7 +279,9 @@ export class HTMLElementExtension<
 			}
 
 			return child.toString();
-		}));
+		};
+
+		this.el().append(...children.flatMap(intoNodeValue));
 
 		return this;
 	}
