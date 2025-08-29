@@ -267,6 +267,17 @@ export class HTMLElementExtension<
 
 			if (child instanceof Date) return child.toISOString();
 
+			if (child instanceof Promise) {
+				const $hack = document.createComment("Lazy Component");
+
+				child
+					.then((component) => // @ts-expect-error : to fixed
+						$hack.replaceWith(intoNodeValue(component)))
+					.catch(() => {});
+
+				return $hack;
+			}
+
 			if (child instanceof State) return handleSignal(child);
 
 			if (child instanceof Computed) return handleSignalComputed(child);

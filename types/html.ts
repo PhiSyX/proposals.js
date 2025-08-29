@@ -10,7 +10,9 @@ export type Child =
 	| State<any>
 	| Computed<any>
 	| HTMLElement
-	| HTMLElementExtensionBase<keyof HTMLElementTagNameMap>;
+	| HTMLElementExtensionBase<keyof HTMLElementTagNameMap>
+	| Promise<HTMLElementExtensionBase<keyof HTMLElementTagNameMap>>
+	;
 
 export type ClassName = ToString | ClassNameRecord;
 export type ClassNameRecord = Record<string, FullPredicate>;
