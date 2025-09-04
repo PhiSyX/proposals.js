@@ -57,9 +57,29 @@ export class HTMLHeadingLevel6ElementExtension extends HTMLHeadingElementExtensi
 	}
 }
 
+
+export class HTMLHGroupElementExtension extends HTMLElementExtension<
+	"hgroup",
+	| HTMLParagraphElement
+	| HTMLHeadingLevel1ElementExtension
+	| HTMLHeadingLevel2ElementExtension
+	| HTMLHeadingLevel3ElementExtension
+	| HTMLHeadingLevel4ElementExtension
+	| HTMLHeadingLevel5ElementExtension
+	| HTMLHeadingLevel6ElementExtension
+>
+{
+	constructor()
+	{
+		super("hgroup");
+	}
+}
+
 export const h1 = makeHTMLElementExtension(HTMLHeadingLevel1ElementExtension, { decorate: false });
 export const h2 = makeHTMLElementExtension(HTMLHeadingLevel2ElementExtension, { decorate: false });
 export const h3 = makeHTMLElementExtension(HTMLHeadingLevel3ElementExtension, { decorate: false });
 export const h4 = makeHTMLElementExtension(HTMLHeadingLevel4ElementExtension, { decorate: false });
 export const h5 = makeHTMLElementExtension(HTMLHeadingLevel5ElementExtension, { decorate: false });
 export const h6 = makeHTMLElementExtension(HTMLHeadingLevel6ElementExtension, { decorate: false });
+
+export const hgroup = makeHTMLElementExtension(HTMLHGroupElementExtension);
