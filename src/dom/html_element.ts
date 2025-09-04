@@ -2,6 +2,7 @@
 // Export //
 // ------ //
 
+export * from "#root/dom/html_element/embedded_element";
 export * from "#root/dom/html_element/flow_element";
 export * from "#root/dom/html_element/form_element";
 export * from "#root/dom/html_element/heading_element";

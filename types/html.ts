@@ -20,6 +20,13 @@ import type {
 	HTMLSpanElementExtension,
 	HTMLNavElementExtension,
 	HTMLSectionElementExtension,
+	HTMLAbbrElementExtension,
+	HTMLArticleElementExtension,
+	HTMLAsideElementExtension,
+	HTMLAudioElementExtension,
+	HTMLEmElementExtension,
+	HTMLHGroupElementExtension,
+	HTMLStrongElementExtension,
 } from "#root/dom/html_element";
 import type { HTMLElementExtensionBase } from "#root/dom/html_extension";
 
@@ -65,6 +72,11 @@ export type HTMLButtonElementType = "submit" | "reset" | "button";
 
 export type SubmitListener = (evt: SubmitEvent, data: Record<string, any>) => void;
 
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Content_categories#embedded_content
+export type EmbeddedContent = 
+	| HTMLAudioElementExtension
+	;
+
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Content_categories#form-associated_content
 export type FormAssociatedContent =
 	| HTMLButtonElementExtension
@@ -74,11 +86,16 @@ export type FormAssociatedContent =
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Content_categories#flow_content
 export type FlowContent =
 	| HTMLAnchorElementExtension
+	| HTMLArticleElementExtension
+	| HTMLAsideElementExtension
+	| HTMLAudioElementExtension
 	| HTMLBRElementExtension
 	| HTMLButtonElementExtension
+	| HTMLEmElementExtension
 	| HTMLDivElementExtension
 	| HTMLFormElementExtension
 	| HTMLHeaderElementExtension
+	| HTMLHGroupElementExtension
 	| HTMLHRElementExtension
 	| HTMLInputElementExtension
 	| HTMLLabelElementExtension
@@ -86,6 +103,7 @@ export type FlowContent =
 	| HTMLNavElementExtension
 	| HTMLSectionElementExtension
 	| HTMLSpanElementExtension
+	| HTMLStrongElementExtension
 	| HTMLUListElementExtension
 	;
 
@@ -99,6 +117,8 @@ export type InteractiveContent =
 
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Content_categories#sectioning_content
 export type SectionContent =
+	| HTMLArticleElementExtension
+	| HTMLAsideElementExtension
 	| HTMLNavElementExtension
 	| HTMLSectionElementExtension
 	;
@@ -111,6 +131,7 @@ export type HeadingContent =
 	| HTMLHeadingLevel4ElementExtension
 	| HTMLHeadingLevel5ElementExtension
 	| HTMLHeadingLevel6ElementExtension
+	| HTMLHGroupElementExtension
 	;
 
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Content_categories#palpable_content
@@ -118,21 +139,27 @@ export type PalpableContent =
 	| HTMLAnchorElementExtension
 	| HTMLButtonElementExtension
 	| HTMLDivElementExtension
+	| HTMLEmElementExtension
 	| HTMLFormElementExtension
 	| HTMLLabelElementExtension
 	| HTMLNavElementExtension
 	| HTMLSectionElementExtension
 	| HTMLSpanElementExtension
+	| HTMLStrongElementExtension
 	;
 
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Content_categories#phrasing_content
 export type PhrasingContent =
+	| HTMLAbbrElementExtension
+	| HTMLAudioElementExtension
 	| HTMLBRElementExtension
 	| HTMLButtonElementExtension
+	| HTMLEmElementExtension
 	| HTMLInputElementExtension
 	| HTMLLabelElementExtension
 	| HTMLSlotElementExtension
 	| HTMLSpanElementExtension
+	| HTMLStrongElementExtension
 	;
 
 
