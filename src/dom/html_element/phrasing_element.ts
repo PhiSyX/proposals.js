@@ -5,6 +5,22 @@ import {
 import type { PhrasingContent } from "#types/html";
 import type { ToString } from "#types/lang";
 
+// -------------- //
+// Implémentation //
+// -------------- //
+
+export class HTMLAbbrElementExtension extends HTMLElementExtension<"abbr">
+{
+    constructor(title?: ToString)
+    {
+        super("abbr");
+
+        if (title) {
+            this.title(title);
+        }
+    }
+}
+
 export class HTMLBRElementExtension extends HTMLVoidElementExtension<"br">
 {
     constructor()
@@ -24,6 +40,14 @@ export class HTMLHRElementExtension extends HTMLVoidElementExtension<"hr">
     {
         return this.dataset({ text: text.toString() });
     }
+}
+
+export class HTMLEmElementExtension extends HTMLElementExtension<"em">
+{
+	constructor()
+	{
+		super("em");
+	}
 }
 
 export class HTMLTabElementExtension extends HTMLElementExtension<"span", PhrasingContent>
@@ -67,8 +91,23 @@ export class HTMLSlotElementExtension extends HTMLElementExtension<"slot">
 	}
 }
 
+export class HTMLStrongElementExtension extends HTMLElementExtension<"strong", PhrasingContent>
+{
+    constructor()
+    {
+        super("strong");
+    }
+}
+
+// ------ //
+// Export //
+// ------ //
+
+export const abbr = makeHTMLElementExtension(HTMLAbbrElementExtension);
 export const br = makeHTMLVoidElementExtension(HTMLBRElementExtension);
 export const hr = makeHTMLVoidElementExtension(HTMLHRElementExtension);
+export const em = makeHTMLElementExtension(HTMLEmElementExtension);
 export const tab = makeHTMLElementExtension(HTMLTabElementExtension, { decorate: false });
 export const slot = makeHTMLElementExtension(HTMLSlotElementExtension);
 export const span = makeHTMLElementExtension(HTMLSpanElementExtension);
+export const strong = makeHTMLElementExtension(HTMLStrongElementExtension);
