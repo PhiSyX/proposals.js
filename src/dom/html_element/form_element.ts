@@ -1,8 +1,10 @@
 import type { HTMLElementExtensionBase } from "#root/dom/html_extension";
 import type { Option } from "#root/safety/contract/option";
 import type {
+	FlowContent,
 	HTMLButtonElementType, HTMLFormElementMethod, HTMLInputElementType,
-	Listeners, SubmitListener, ToEvent,
+	InteractiveContent,
+	Listeners, PhrasingContent, SubmitListener, ToEvent,
 } from "#types/html";
 import type { ToString } from "#types/lang";
 
@@ -116,7 +118,7 @@ export abstract class HTMLFormInputComponentContract
 	abstract render(): HTMLElementExtensionBase<keyof HTMLElementTagNameMap>;
 }
 
-export class HTMLFormElementExtension extends HTMLElementExtension<"form">
+export class HTMLFormElementExtension extends HTMLElementExtension<"form", FlowContent>
 {
 	// TODO: change string to HTMLFormInputName
 	#fields: Map<string, HTMLFormInputComponentContract> = new Map();
@@ -200,7 +202,7 @@ export class HTMLInputElementExtension extends HTMLVoidElementExtension<"input">
 	}
 }
 
-export class HTMLLabelElementExtension extends HTMLElementExtension<"label">
+export class HTMLLabelElementExtension extends HTMLElementExtension<"label", PhrasingContent>
 {
 	constructor(label: ToString)
 	{
@@ -214,7 +216,7 @@ export class HTMLLabelElementExtension extends HTMLElementExtension<"label">
 	}
 }
 
-export class HTMLButtonElementExtension extends HTMLElementExtension<"button">
+export class HTMLButtonElementExtension extends HTMLElementExtension<"button", PhrasingContent>
 {
 	constructor(type: HTMLButtonElementType = "button")
 	{

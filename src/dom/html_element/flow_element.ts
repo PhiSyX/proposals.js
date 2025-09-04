@@ -1,7 +1,7 @@
-import type { Child } from "#types/html";
+import type { FlowContent } from "#types/html";
 import { HTMLElementExtension, makeHTMLElementExtension } from "../html_extension";
 
-export class HTMLDivElementExtension extends HTMLElementExtension<"div">
+export class HTMLDivElementExtension extends HTMLElementExtension<"div", FlowContent>
 {
     constructor()
     {
@@ -9,15 +9,7 @@ export class HTMLDivElementExtension extends HTMLElementExtension<"div">
     }
 }
 
-export class HTMLSectionElementExtension extends HTMLElementExtension<"section">
-{
-    constructor()
-    {
-        super("section");
-    }
-}
-
-export class HTMLHeaderElementExtension extends HTMLElementExtension<"header">
+export class HTMLHeaderElementExtension extends HTMLElementExtension<"header", FlowContent>
 {
     constructor()
     {
@@ -25,26 +17,18 @@ export class HTMLHeaderElementExtension extends HTMLElementExtension<"header">
     }
 }
 
-export class HTMLNavElementExtension extends HTMLElementExtension<"nav">
+export class HTMLUListElementExtension extends HTMLElementExtension<"ul", HTMLLIElementExtension>
 {
-    constructor()
-    {
-        super("nav");
-    }
-}
-
-export class HTMLUListElementExtension extends HTMLElementExtension<"ul">
-{
-    constructor(children: Array<Child> = [])
+    constructor(listItemChildren: Array<FlowContent> = [])
     {
         super("ul");
 
-		for (const child of children) {
+		for (const child of listItemChildren) {
 			this.li(child);
 		}
     }
 
-	li(child: Child): this
+	li(child: FlowContent): this
 	{
 		if (child instanceof HTMLLIElementExtension) {
 			return this.children(child);
@@ -53,7 +37,7 @@ export class HTMLUListElementExtension extends HTMLElementExtension<"ul">
 	}
 }
 
-export class HTMLLIElementExtension extends HTMLElementExtension<"li">
+export class HTMLLIElementExtension extends HTMLElementExtension<"li", FlowContent>
 {
     constructor()
     {
@@ -62,8 +46,6 @@ export class HTMLLIElementExtension extends HTMLElementExtension<"li">
 }
 
 export const div = makeHTMLElementExtension(HTMLDivElementExtension);
-export const section = makeHTMLElementExtension(HTMLSectionElementExtension);
 export const header = makeHTMLElementExtension(HTMLHeaderElementExtension);
-export const nav = makeHTMLElementExtension(HTMLNavElementExtension);
 export const ul = makeHTMLElementExtension(HTMLUListElementExtension)
 export const li = makeHTMLElementExtension(HTMLLIElementExtension)

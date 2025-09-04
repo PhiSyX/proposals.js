@@ -1,7 +1,8 @@
-import { 
-    HTMLElementExtension, HTMLVoidElementExtension, 
+import {
+    HTMLElementExtension, HTMLVoidElementExtension,
     makeHTMLElementExtension, makeHTMLVoidElementExtension
 } from "#root/dom/html_extension";
+import type { PhrasingContent } from "#types/html";
 import type { ToString } from "#types/lang";
 
 export class HTMLBRElementExtension extends HTMLVoidElementExtension<"br">
@@ -25,7 +26,7 @@ export class HTMLHRElementExtension extends HTMLVoidElementExtension<"hr">
     }
 }
 
-export class HTMLTabElementExtension extends HTMLElementExtension<"span">
+export class HTMLTabElementExtension extends HTMLElementExtension<"span", PhrasingContent>
 {
     constructor(indentSize: number = 4)
     {
@@ -40,7 +41,7 @@ export class HTMLTabElementExtension extends HTMLElementExtension<"span">
     }
 }
 
-export class HTMLSpanElementExtension extends HTMLElementExtension<"span">
+export class HTMLSpanElementExtension extends HTMLElementExtension<"span", PhrasingContent>
 {
     constructor()
     {

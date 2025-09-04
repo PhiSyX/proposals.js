@@ -1,9 +1,10 @@
+import type { PhrasingContent } from "#types/html";
 import { HTMLElementExtension, makeHTMLElementExtension } from "../html_extension";
 
 
 abstract class HTMLHeadingElementExtension<
 	T extends keyof HTMLElementTagNameMap
-> extends HTMLElementExtension<T>
+> extends HTMLElementExtension<T, PhrasingContent>
 {
 	constructor(level: 1 | 2 | 3 | 4 | 5 | 6, title: Parameters<HTMLElementExtension<T>["text"]>[0])
 	{

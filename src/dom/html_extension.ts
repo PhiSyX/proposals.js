@@ -53,7 +53,9 @@ interface HTMLVoidElementHackyDecorator<
 // Implémentation //
 // -------------- //
 
-export class HTMLElementExtensionBase<T extends keyof HTMLElementTagNameMap>
+export class HTMLElementExtensionBase<
+	T extends keyof HTMLElementTagNameMap,
+>
 {
     #element: HTMLElementTagNameMap[T];
 
@@ -71,11 +73,11 @@ export class HTMLElementExtensionBase<T extends keyof HTMLElementTagNameMap>
 	// Methods //
 	// ------- //
 
-	attr(name: string, value: ToStringRaw): this
+	attr(name: ToStringRaw, value: ToStringRaw): this
 	{
 		this.#element.setAttribute(
 			// TODO: kebab case
-			name,
+			name.toString(),
 			value.toString(),
 		);
 		return this;
@@ -218,10 +220,20 @@ export class HTMLVoidElementExtension<
 }
 
 export class HTMLElementExtension<
-	T extends keyof HTMLElementTagNameMap
+	T extends keyof HTMLElementTagNameMap,
+	C = Child
 > extends HTMLElementExtensionBase<T>
 {
-	children(...children: Array<Child>): this
+	children(
+		...children: Array<
+			| C
+			| Primitive
+			| ToString
+			| Date
+			| State<any>
+			| Computed<any>
+		>
+	): this
 	{
 		const handleSignal = (child: State<ToString>) => {
 			const toNode = (val: ToString): Text => {
@@ -257,7 +269,7 @@ export class HTMLElementExtension<
 			return node;
 		};
 
-		const intoNodeValue = (child: Child) => {
+		const intoNodeValue = (child: C) => {
 			if (isPrimitive(child)) return renderPrimitive(child);
 
 			if (
@@ -271,7 +283,7 @@ export class HTMLElementExtension<
 				const $hack = document.createComment("Lazy Component");
 
 				child
-					.then((component) => // @ts-expect-error : to fixed
+					.then((component) =>
 						$hack.replaceWith(intoNodeValue(component)))
 					.catch(() => {});
 
@@ -283,15 +295,19 @@ export class HTMLElementExtension<
 			if (child instanceof Computed) return handleSignalComputed(child);
 
 			if (
+				// @ts-expect-error
 				("render" in child && typeof child.render === "function") ||
 				child instanceof HTMLElementExtensionBase
 			) {
+				// @ts-expect-error
 				return child.render();
 			}
 
+			// @ts-expect-error
 			return child.toString();
 		};
 
+		// @ts-expect-error
 		this.el().append(...children.flatMap(intoNodeValue));
 
 		return this;
